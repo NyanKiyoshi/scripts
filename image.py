@@ -1,19 +1,18 @@
 #!/usr/bin/env python
-
 import gtk
+
+window = gtk.Window()
+window.set_default_size(640, 480)
+window.set_title("Image Viewer")
 
 class Image:
     def __init__(self):
-        window = gtk.Window()
-        window.set_default_size(640, 480)
         
         vbox = gtk.VBox(False, 5)
-        
         scrolledwindow = gtk.ScrolledWindow()
         
-        self.image = gtk.Image()       
+        self.image = gtk.Image()
         self.button = gtk.FileChooserButton("Select Image", None)
-        
         self.button.connect("file-set", self.load_image)
         
         window.add(vbox)
@@ -26,6 +25,8 @@ class Image:
     
     def load_image(self, widget):
         self.image.set_from_file(self.button.get_filename())
+        window.set_title("Image Viewer - " + self.button.get_filename())
+        window.set_icon_from_file(self.button.get_filename())
 
 Image()
 gtk.main()
