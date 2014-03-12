@@ -67,11 +67,9 @@ while 1:    #puts it in a loop
     t = text.split(':!say') #you can change t and to :)
     to = t[1].strip() #this code is for getting the first word after !hi
     irc.send('PRIVMSG '+channel+' :'+str(to)+'\n')
-  if text.find('http://') != -1:
-    t = text.split('http://')
-    line = t[1].strip()
-    t = line.split()
-    url = 'http://'+t[0].strip()
+  if text.find('http') != -1:
+    parse = re.findall('https?://[^\"\'\(\)\[\]\{\}\<\>]+', text)
+    url = str(parse[0]).rstrip() #took the first link and remove newline and whitespaces
     if check_url(url):
       get = urllib.urlopen(url)
       wget = get.read()
@@ -79,6 +77,7 @@ while 1:    #puts it in a loop
       if wget.find('<title>') != -1:
         title = get_title(wget)
         irc.send('PRIVMSG '+channel+' :('+url+')Title: '+title+' \n')
+        print '('+url+')Title: '+title
   if text.find(':!stop in the name of sey') != -1:
     irc.send('QUIT : '+quitMsg+'\n')
     sys.exit(0)
