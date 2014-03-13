@@ -1,4 +1,8 @@
 #!/usr/bin/env python
+
+#Author: Haelwenn Monnier (lanodan) <haelwenn.monnier@gmail.com>
+#License: CC-BY-SA
+
 import socket
 import sys
 import re
@@ -31,17 +35,18 @@ def get_title(textInput):
   return textInput[idx1+len('<title>'):idx2].strip()
 
 def check_url(url):
-  try:
-    urllib.urlopen(url)
-    return True
-  except:
-    return False
+  if (len(url) > 8) : # I assume a link is mkre than 8nchracter long
+    try:
+      urllib.urlopen(url)
+      return True
+    except:
+      return False
 
-botnick = 'lanobot'
+botnick = 'feyris-nyanyan'
 server  = 'holmes.freenode.net'
 port    = '6667'
 channel = '#kisune'
-quitMsg = 'Emergency time shift !'
+quitMsg = 'Sayonara-nyan !'
 
 load_config()
 
@@ -51,7 +56,7 @@ irc.send("USER "+ botnick +" Lanodan Bot :Bot made by lanodan using python!\n") 
 irc.send("NICK "+ botnick +"\n")
 time.sleep(1)
 irc.send("JOIN "+ channel +"\n")        #join the chan
-irc.send('PRIVMSG '+channel+' :Hello there !\n')
+irc.send('PRIVMSG '+channel+' :Ohayo-nyan !\n')
 
 while 1:    #puts it in a loop
   text=irc.recv(2040)  #receive the text
@@ -62,7 +67,7 @@ while 1:    #puts it in a loop
   if text.find(':!hi') !=-1: #you can change !hi to whatever you want
     t = text.split(':!hi') #you can change t and to :)
     to = t[1].strip() #this code is for getting the first word after !hi
-    irc.send('PRIVMSG '+channel+' :Hello '+str(to)+' ! \n')
+    irc.send('PRIVMSG '+channel+' :Ohayo '+str(to)+' nyan ! \n')
   if text.find(':!say') !=-1: #you can change !hi to whatever you want
     t = text.split(':!say') #you can change t and to :)
     to = t[1].strip() #this code is for getting the first word after !hi
@@ -78,6 +83,8 @@ while 1:    #puts it in a loop
         title = get_title(wget)
         irc.send('PRIVMSG '+channel+' :('+url+')Title: '+title+' \n')
         print '('+url+')Title: '+title
-  if text.find(':!stop in the name of sey') != -1:
+  if text.find(':!source') != -1:
+    irc.send('PRIVMSG '+channel+' :My sourcecode is under CC-BY-SA and available at the following address: https://github.com/lanodan/scripts/tree/master/IRCBot \n')
+  if text.find(':!stop in the name of the DrPepper') != -1:
     irc.send('QUIT : '+quitMsg+'\n')
     sys.exit(0)
