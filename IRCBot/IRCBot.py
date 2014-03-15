@@ -73,7 +73,7 @@ while 1:    #puts it in a loop
     to = t[1].strip() #this code is for getting the first word after !hi
     irc.send('PRIVMSG '+channel+' :'+str(to)+'\n')
   if text.find('http') != -1:
-    parse = re.findall('https?://[^\"\'\(\)\[\]\{\}\<\>]+', text)
+    parse = re.findall('https?://[^\"\'\(\)\[\]\{\}\<\>\ ]+', text)
     url = str(parse[0]).rstrip() #took the first link and remove newline and whitespaces
     if check_url(url):
       get = urllib.urlopen(url)
@@ -85,6 +85,6 @@ while 1:    #puts it in a loop
         print '('+url+')Title: '+title
   if text.find(':!source') != -1:
     irc.send('PRIVMSG '+channel+' :My sourcecode is under CC-BY-SA and available at the following address: https://github.com/lanodan/scripts/tree/master/IRCBot \n')
-  if text.find(':!stop in the name of the DrPepper') != -1:
+  if text.find(':!stop in the name of sey') != -1:
     irc.send('QUIT : '+quitMsg+'\n')
     sys.exit(0)
