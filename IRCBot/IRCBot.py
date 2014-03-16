@@ -14,14 +14,14 @@ import os
 
 def load_config_value(section, option):
   try:
-    out = Config.get(section)[option]
+    out = Config.get(section)[:option]
     return out
   except:
     print('exception on '+option)
 
 def load_config():
   config = ConfigParser.ConfigParser()
-  configLocation = os.path.join(os.path.dirname(__file__), 'config.ini')
+  configLocation = os.path.join(os.path.dirname(__file__), './config.ini')
   config.read(configLocation)
   botnick = load_config_value('Config', 'Nick')
   server  = load_config_value('Config', 'Server')
@@ -42,21 +42,25 @@ def check_url(url):
     except:
       return False
 
+def printIrc(ircout):
+  irc.send('PRIVMSG '+channel+' :'+ircout+'\n')
+
 botnick = 'feyris-nyanyan'
 server  = 'holmes.freenode.net'
 port    = '6667'
 channel = '#kisune'
 quitMsg = 'Sayonara-nyan !'
+source  = 'My sourcecode is under CC-BY-SA and available at the following address: https://github.com/lanodan/scripts/tree/master/IRCBot'
 
 load_config()
 
 irc = socket.socket(socket.AF_INET, socket.SOCK_STREAM) #defines the socket
 irc.connect((server, int(port)))                                                         #connects to the server
-irc.send("USER "+ botnick +" Lanodan Bot :Bot made by lanodan using python!\n") #user authentication
+irc.send("USER "+ botnick +" Feyris NyanNyan :Bot made by lanodan using python!\n") #user authentication
 irc.send("NICK "+ botnick +"\n")
 time.sleep(1)
 irc.send("JOIN "+ channel +"\n")        #join the chan
-irc.send('PRIVMSG '+channel+' :Ohayo-nyan !\n')
+printIrc('Ohayo-nyan ! [http://i.imgur.com/vzYFOkp.jpg]')
 
 while 1:    #puts it in a loop
   text=irc.recv(2040)  #receive the text
@@ -67,24 +71,39 @@ while 1:    #puts it in a loop
   if text.find(':!hi') !=-1: #you can change !hi to whatever you want
     t = text.split(':!hi') #you can change t and to :)
     to = t[1].strip() #this code is for getting the first word after !hi
-    irc.send('PRIVMSG '+channel+' :Ohayo '+str(to)+' nyan ! \n')
-  if text.find(':!say') !=-1: #you can change !hi to whatever you want
+    printIrc('Ohayo-nyan '+str(to)+' ! [http://i.imgur.com/vzYFOkp.jpg]')
+  if text.find(':!say') != -1: #you can change !hi to whatever you want
     t = text.split(':!say') #you can change t and to :)
-    to = t[1].strip() #this code is for getting the first word after !hi
-    irc.send('PRIVMSG '+channel+' :'+str(to)+'\n')
+    out = t[1].strip() #this code is for getting the first word after !hi
+    printIrc(str(out))
+  if text.find(':!action') != -1: #you can change !hi to whatever you want
+    t = text.split(':!action') #you can change t and to :)
+    out = t[1].strip() #this code is for getting the first word after !hi
+    printIrc('\x01ACTION '+out+'\x01')
+  if text.find(':!define') != -1:
+    t = text.split(':!define')
+    define = t[1].strip()
+    if (define):
+      printIrc('http://lmgtfy.com/?q='+define)
+    else:
+      printIrc('Are you drunk ?') 
   if text.find('http') != -1:
     parse = re.findall('https?://[^\"\'\(\)\[\]\{\}\<\>\ ]+', text)
-    url = str(parse[0]).rstrip() #took the first link and remove newline and whitespaces
-    if check_url(url):
-      get = urllib.urlopen(url)
-      wget = get.read()
-      get.close()
-      if wget.find('<title>') != -1:
-        title = get_title(wget)
-        irc.send('PRIVMSG '+channel+' :('+url+')Title: '+title+' \n')
-        print '('+url+')Title: '+title
+    try:
+      url = str(parse[0]).rstrip() #took the first link and remove newline and whitespaces
+      if check_url(url):
+        get = urllib.urlopen(url)
+        wget = get.read()
+        get.close()
+        if wget.find('<title>') != -1:
+          title = get_title(wget)
+          printIrc('('+url+')Title: '+title)
+          print '('+url+')Title: '+title
+    except:
+      print 'Invalid url'
   if text.find(':!source') != -1:
-    irc.send('PRIVMSG '+channel+' :My sourcecode is under CC-BY-SA and available at the following address: https://github.com/lanodan/scripts/tree/master/IRCBot \n')
+    printIrc(source)
   if text.find(':!stop in the name of sey') != -1:
     irc.send('QUIT : '+quitMsg+'\n')
+    time.sleep(1)
     sys.exit(0)
