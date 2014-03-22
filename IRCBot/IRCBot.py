@@ -14,7 +14,7 @@ import os
 
 def load_config_value(section, option):
   try:
-    out = Config.get(section)[:option]
+    out = Config.get(section)[option]
     return out
   except:
     print('exception on '+option)
@@ -45,21 +45,23 @@ def check_url(url):
 def printIrc(ircout):
   irc.send('PRIVMSG '+channel+' :'+ircout+'\n')
 
-botnick = 'feyris-nyanyan'
+botnick = 'feyris-nyannyan'
 server  = 'holmes.freenode.net'
 port    = '6667'
 channel = '#kisune'
 quitMsg = 'Sayonara-nyan !'
 source  = 'My sourcecode is under CC-BY-SA and available at the following address: https://github.com/lanodan/scripts/tree/master/IRCBot'
+passwd  = ''
 
 load_config()
 
 irc = socket.socket(socket.AF_INET, socket.SOCK_STREAM) #defines the socket
 irc.connect((server, int(port)))                                                         #connects to the server
-irc.send("USER "+ botnick +" Feyris NyanNyan :Bot made by lanodan using python!\n") #user authentication
-irc.send("NICK "+ botnick +"\n")
+irc.send('PASS '+ passwd +'\n')
+irc.send('NICK '+ botnick +'\n')
+irc.send('USER '+ botnick +' Feyris NyanNyan :Bot made by lanodan using python!\n') #user authentication
 time.sleep(1)
-irc.send("JOIN "+ channel +"\n")        #join the chan
+irc.send('JOIN '+ channel +'\n')        #join the chan
 printIrc('Ohayo-nyan ! [http://i.imgur.com/vzYFOkp.jpg]')
 
 while 1:    #puts it in a loop
@@ -80,13 +82,6 @@ while 1:    #puts it in a loop
     t = text.split(':!action') #you can change t and to :)
     out = t[1].strip() #this code is for getting the first word after !hi
     printIrc('\x01ACTION '+out+'\x01')
-  if text.find(':!define') != -1:
-    t = text.split(':!define')
-    define = t[1].strip()
-    if (define):
-      printIrc('http://lmgtfy.com/?q='+define)
-    else:
-      printIrc('Are you drunk ?') 
   if text.find('http') != -1:
     parse = re.findall('https?://[^\"\'\(\)\[\]\{\}\<\>\ ]+', text)
     try:
@@ -97,8 +92,8 @@ while 1:    #puts it in a loop
         get.close()
         if wget.find('<title>') != -1:
           title = get_title(wget)
-          printIrc('('+url+')Title: '+title)
-          print '('+url+')Title: '+title
+          printIrc('Title: '+title)
+          print url+', '+title
     except:
       print 'Invalid url'
   if text.find(':!source') != -1:
