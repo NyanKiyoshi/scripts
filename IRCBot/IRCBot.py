@@ -55,6 +55,7 @@ passwd  = ''
 
 load_config()
 
+log = open('IRCBot.log', 'a') #open the log file
 irc = socket.socket(socket.AF_INET, socket.SOCK_STREAM) #defines the socket
 irc.connect((server, int(port)))                                                         #connects to the server
 irc.send('PASS '+ passwd +'\n')
@@ -94,6 +95,7 @@ while 1:    #puts it in a loop
           title = get_title(wget)
           printIrc('Title: '+title)
           print url+', '+title
+          log.write(url+', '+title)
     except:
       print 'Invalid url'
   if text.find(':!source') != -1:
