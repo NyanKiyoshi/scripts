@@ -12,23 +12,6 @@ import subprocess
 import ConfigParser
 import os
 
-def load_config_value(section, option):
-  try:
-    out = Config.get(section)[option]
-    return out
-  except:
-    print('exception on '+option)
-
-def load_config():
-  config = ConfigParser.ConfigParser()
-  configLocation = os.path.join(os.path.dirname(__file__), './config.ini')
-  config.read(configLocation)
-  botnick = load_config_value('Config', 'Nick')
-  server  = load_config_value('Config', 'Server')
-  port    = load_config_value('Config', 'Port')
-  channel = load_config_value('Config', 'Channel')
-  quitMsg = load_config_value('Config', 'QuitMessage')
-
 def get_title(textInput):
   idx1=textInput.find('<title>')
   idx2=textInput.find('</title>')
@@ -50,15 +33,18 @@ def log(line):
   log.write(line+'\n')
   log.close()
 
-botnick = 'feyris-nyannyan'
-server  = 'holmes.freenode.net'
-port    = '6667'
-channel = '#kisune'
-quitMsg = 'Sayonara-nyan !'
-source  = 'My sourcecode is under CC-BY-SA and available at the following address: https://github.com/lanodan/scripts/tree/master/IRCBot'
-passwd  = ''
-
-load_config()
+config = ConfigParser.ConfigParser()
+if (config.read('config.ini')):
+  botnick = config.get('Config', 'nick')
+  passwd  = config.get('Config', 'passwd')
+  server  = config.get('Config', 'server')
+  port    = config.get('Config', 'port')
+  channel = config.get('Config', 'channel')
+  quitMsg = config.get('Config', 'quitMessage')
+  source  = config.get('Config', 'source')
+else:
+  print '[ERROR] Couln\'d load config.ini. Exiting…'
+  sys.exit(1)
 
 irc = socket.socket(socket.AF_INET, socket.SOCK_STREAM) #defines the socket
 irc.connect((server, int(port)))                                                         #connects to the server
