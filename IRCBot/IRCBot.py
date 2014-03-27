@@ -12,24 +12,19 @@ import subprocess
 import ConfigParser
 import os
 
-def get_title(textInput):
-  idx1=textInput.find('<title>')
-  idx2=textInput.find('</title>')
-  return textInput[idx1+len('<title>'):idx2].strip()
+def get_element(textInput, elem):
+  idx1=textInput.find('<'+elem+'>')
+  idx2=textInput.find('</'+elem+'>')
+  return textInput[idx1+len('<'+elem+'>'):idx2].strip()
 
-def check_url(url):
-  if (len(url) > 8) : # I assume a link is mkre than 8nchracter long
-    try:
-      urllib.urlopen(url)
-      return True
-    except:
-      return False
-
+# Output string into the channel
 def printIrc(ircout):
   irc.send('PRIVMSG '+channel+' :'+ircout+'\n')
 
+#line: string of text to add in the log
 def log(line):
-  log = open('IRCBot.log', 'a') #open the log file
+  print '[LOG] '+line
+  log = open('IRCBot.log', 'a')
   log.write(line+'\n')
   log.close()
 
@@ -43,7 +38,7 @@ if (config.read('config.ini')):
   quitMsg = config.get('Config', 'quitMessage')
   source  = config.get('Config', 'source')
 else:
-  print '[ERROR] Couln\'d load config.ini. Exiting…'
+  print '[ERROR] Couln\'d load config.ini. Example config file: config.ini.example. Exiting'
   sys.exit(1)
 
 irc = socket.socket(socket.AF_INET, socket.SOCK_STREAM) #defines the socket
@@ -56,8 +51,8 @@ irc.send('JOIN '+ channel +'\n')        #join the chan
 printIrc('Ohayo-nyan ! [http://i.imgur.com/vzYFOkp.jpg]')
 
 while 1:    #puts it in a loop
-  text=irc.recv(2040)  #receive the text
-  print text   #print text to console
+  text=irc.recv(2048)  #receive the text
+  print text
 
   if text.find('PING') != -1:                          #check if 'PING' is found
     irc.send('PONG ' + text.split() [1] + '\n')      #returnes 'PONG' back t
@@ -77,17 +72,30 @@ while 1:    #puts it in a loop
     parse = re.findall('https?://[^\"\'\(\)\[\]\{\}\<\>\ ]+', text)
     try:
       url = str(parse[0]).rstrip() #took the first link and remove newline and whitespaces
-      if check_url(url):
-        get = urllib.urlopen(url)
-        wget = get.read()
-        get.close()
-        if wget.find('<title>') != -1:
-          title = get_title(wget)
-          printIrc('Title: '+title)
-          print url+', '+title
-          log(url+', '+title)
+      if (len(url) > 8) : # I assume a link is mkre than 8nchracter long
+        try:
+          get = urllib.urlopen(url)
+          wget = get.read()
+          mimeType = get.info().type
+          get.close()
+          if (re.search('text/x?html', mimeType)):
+            if wget.find('<title>') != -1:
+              title = get_element(wget, 'title')
+              printIrc('Title: '+title)
+              log(url+', '+title)
+            if wget.find('<TITLE>') != -1:
+              title = get_element(wget, 'TITLE')
+              printIrc('Title: '+title)
+              log(url+', '+title)
+          else:
+            printIrc('Type: '+mimeType)
+            log(url+', '+mimeType)
+        except:
+          printIrc('[ERROR] Can\'t open the page')
+      else:
+        printIrc('Link too short')
     except:
-      print 'Invalid url'
+      printIrc('[ERROR] Invalid URL')
   if text.find(':!source') != -1:
     printIrc(source)
   if text.find(':!stop in the name of sey') != -1:
