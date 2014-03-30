@@ -72,7 +72,7 @@ while 1:    #puts it in a loop
     parse = re.findall('https?://[^\"\'\(\)\[\]\{\}\<\>\ ]+', text)
     try:
       url = str(parse[0]).rstrip() #took the first link and remove newline and whitespaces
-      if (len(url) > 8) : # I assume a link is mkre than 8nchracter long
+      if (len(url) > 8) : # I assume a link is more than 8 characters long (thx NyanKiyoshi for spotting my drunkness here xD)
         try:
           get = urllib.urlopen(url)
           wget = get.read()
@@ -98,6 +98,10 @@ while 1:    #puts it in a loop
       printIrc('[ERROR] Invalid URL')
   if text.find(':!source') != -1:
     printIrc(source)
+  #if text.find(':!'+nick+' help') != -1:
+  #  asker = 
+  if text.find(' JOIN ') != -1:
+
   if text.find(':!stop in the name of sey') != -1:
     irc.send('QUIT : '+quitMsg+'\n')
     time.sleep(1)
