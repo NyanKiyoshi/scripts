@@ -1,1 +1,3 @@
-/home/haelwenn/.local/bin/screenshot
+#!/bin/sh
+date=`date`
+import "/seagate/net/the-delta/datalove/img/screens/$date.png" && x-www-browser "http://the-delta.net/datalove/screens/$date.png"
