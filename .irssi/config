@@ -12,7 +12,7 @@ settings = {
     autolog = "yes";
     autolog_level = "all -MSGS";
     autoclose_windows = "yes";
-    reuse_unused_windows = "no";
+    reuse_unused_windows = "no"; #Prevent choas in irssi windows when a server goes down
   };
 };
 servers = (
@@ -101,9 +101,9 @@ completions = {
   em = { value = "lanodan.delta@free.fr"; auto = "no"; };
   lmgtfy = { value = "http://lmgtfy.com/?q="; auto = "yes"; };
   twtr = { value = "@lanodan"; auto = "no"; };
-  web = { value = "http://bit.ly/lanodan"; auto = "no"; };<br>};
+  web = { value = "http://bit.ly/lanodan"; auto = "no"; }; };
 logs = { };
-statusbar = {
+statusbar = { #Put the prompt and statusbar with the windows
   default = {
     prompt = { visible = "active"; type = "window"; position = "2"; };
     window = {
@@ -131,7 +131,7 @@ hilights = (
   { text = "haelwenn"; nick = "yes"; word = "yes"; color = "%R"; }
 );
 aliases = {
-  wc = "part";
+  wc = "part"; #This is a bit shitty
   op_kisune = "^msg chanserv op #Kisune $N";
   deop_kisune = "^msg chanserv deop #Kisune $N";
   feyris = "^msg feyris-nyannyan";
