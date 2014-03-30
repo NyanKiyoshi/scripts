@@ -1,0 +1,141 @@
+settings = {
+  core = {
+    real_name = "Haelwenn MONNIER";
+    user_name = "lanodan";
+    nick = "lanodan";
+    quit_message = "irssi: goodbye guys !";
+    timestamp_format = "%H:%M:%S";
+  };
+  "fe-text" = { actlist_sort = "refnum"; };
+  "fe-common/core" = {
+    theme = "default";
+    autolog = "yes";
+    autolog_level = "all -MSGS";
+    autoclose_windows = "yes";
+    reuse_unused_windows = "no";
+  };
+};
+servers = (
+  {
+    address = "irc.the-delta.net";
+    chatnet = "the-delta";
+    port = "6667";
+    use_ssl = "no";
+    ssl_verify = "no";
+    autoconnect = "yes";
+    password = "minepqss";
+  },
+  {
+    address = "holmes.freenode.net";
+    chatnet = "Freenode";
+    port = "6667";
+    use_ssl = "no";
+    ssl_verify = "no";
+    autoconnect = "yes";
+    password = "minepqss";
+  },
+  {
+    address = "irc.inframonde.org";
+    chatnet = "inframonde";
+    port = "6667";
+    use_ssl = "no";
+    ssl_verify = "no";
+    autoconnect = "yes";
+    password = "minepqss";
+  },
+  {
+    address = "irc.quakenet.org";
+    chatnet = "quakenet";
+    port = "6667";
+    use_ssl = "no";
+    ssl_verify = "no";
+    autoconnect = "no";
+    password = "minepqss";
+  },
+  {
+    address = "irc.deviantart.com";
+    chatnet = "deviart";
+    port = "6667";
+    use_ssl = "no";
+    ssl_verify = "no";
+    autoconnect = "no";
+    user_name = "lanodan53";
+    password = "mineg0ld";
+  },
+  {
+    address = "irc.swordarmor.fr";
+    chatnet = "swordarmor";
+    port = "6667";
+    use_ssl = "no";
+    ssl_verify = "no";
+    autoconnect = "yes";
+  }
+);
+
+chatnets = {
+  Freenode = { type = "IRC"; };
+  "the-delta" = { type = "IRC"; };
+  inframonde = { type = "IRC"; };
+  quakenet = { type = "IRC"; };
+  deviart = { type = "IRC"; };
+  swordarmor = { type = "IRC"; };
+};
+
+channels = (
+  { name = "#main"; chatnet = "the-delta"; autojoin = "yes"; },
+  { name = "#Taverne"; chatnet = "the-delta"; autojoin = "yes"; },
+  { name = "#kisune"; chatnet = "Freenode"; autojoin = "yes"; },
+  { name = "#leloop"; chatnet = "Freenode"; autojoin = "yes"; },
+  { name = "#zsh"; chatnet = "Freenode"; autojoin = "no"; },
+  { name = "#vim"; chatnet = "Freenode"; autojoin = "no"; },
+  { name = "#debian"; chatnet = "Freenode"; autojoin = "no"; },
+  { name = "##javascript"; chatnet = "Freenode"; autojoin = "no"; },
+  { name = "#n-pn"; chatnet = "inframonde"; autojoin = "yes"; },
+  { name = "#inframonde"; chatnet = "inframonde"; autojoin = "yes"; },
+  { name = "#OutOfReality"; chatnet = "quakenet"; autojoin = "yes"; },
+  { name = "#breizh-entropy"; chatnet = "freenode"; autojoin = "yes"; },
+  { name = "#swordarmor"; chatnet = "swordarmor"; autojoin = "yes"; }
+);
+
+completions = {
+  em = { value = "lanodan.delta@free.fr"; auto = "no"; };
+  lmgtfy = { value = "http://lmgtfy.com/?q="; auto = "yes"; };
+  twtr = { value = "@lanodan"; auto = "no"; };
+  web = { value = "http://bit.ly/lanodan"; auto = "no"; };
+};
+logs = { };
+statusbar = {
+  default = {
+    prompt = { visible = "active"; type = "window"; position = "2"; };
+    window = {
+      visible = "active";
+      items = {
+        barstart = { priority = "100"; };
+        user = { };
+        window = { };
+        window_empty = { };
+        lag = { priority = "-1"; };
+        act = { priority = "10"; };
+        more = { priority = "-1"; alignment = "right"; };
+        barend = { priority = "100"; alignment = "right"; };
+      };
+    };
+  };
+};
+ignores = (
+  { mask = "EpicOut"; level = "ALL"; },
+  { level = "JOINS PARTS QUITS"; channels = ( "#leloop" ); },
+  { level = "JOINS PARTS QUITS"; channels = ( "#inframonde" ); }
+);
+hilights = (
+  { text = "lanodan"; nick = "yes"; word = "yes"; color = "%R"; },
+  { text = "haelwenn"; nick = "yes"; word = "yes"; color = "%R"; }
+  { text = "$N"; nick = "yes"; word = "yes"; color = "%R"; }
+);
+aliases = {
+  wc = "part";
+  op_kisune = "^msg chanserv op #Kisune $N";
+  deop_kisune = "^msg chanserv deop #Kisune $N";
+  feyris = "^msg feyris-nyannyan";
+  identify = "^msg NickServ identify";
+};
