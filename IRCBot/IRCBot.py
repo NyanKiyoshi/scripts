@@ -3,14 +3,7 @@
 #Author: Haelwenn Monnier (lanodan) <haelwenn.monnier@gmail.com>
 #License: CC-BY-SA
 
-import socket
-import sys
-import re
-import time
-import urllib
-import subprocess
-import ConfigParser
-import os
+import socket, sys, re, time, urllib, subprocess, ConfigParser, os
 
 def get_element(textInput, elem):
   idx1=textInput.find('<'+elem+'>')
@@ -27,6 +20,8 @@ def log(line):
   log = open('IRCBot.log', 'a')
   log.write(line+'\n')
   log.close()
+
+httpRegex = re.compile('https?://+')
 
 config = ConfigParser.ConfigParser()
 if (config.read('config.ini')):
@@ -68,7 +63,7 @@ while 1:    #puts it in a loop
     t = text.split(':!action') #you can change t and to :)
     out = t[1].strip() #this code is for getting the first word after !hi
     printIrc('\x01ACTION '+out+'\x01')
-  if text.find('http') != -1:
+  if httpRegex.search(text) is not None:
     parse = re.findall('https?://[^\"\'\(\)\[\]\{\}\<\>\ ]+', text)
     try:
       url = str(parse[0]).rstrip() #took the first link and remove newline and whitespaces
@@ -100,9 +95,13 @@ while 1:    #puts it in a loop
     printIrc(source)
   #if text.find(':!'+nick+' help') != -1:
   #  asker = 
-  if text.find(' JOIN ') != -1:
-
+  #if text.find(' JOIN ') != -1:
+  if text.find('KICK '+channel) != -1:
+    time.sleep(1)
+    irc.send('JOIN '+ channel +'\n')        #join the chan
   if text.find(':!stop in the name of sey') != -1:
     irc.send('QUIT : '+quitMsg+'\n')
-    time.sleep(1)
-    sys.exit(0)
+    irc.close()
+    break
+
+sys.exit()
