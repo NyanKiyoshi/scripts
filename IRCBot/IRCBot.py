@@ -16,7 +16,7 @@ def printIrc(ircout):
 
 #line: string of text to add in the log
 def log(line):
-  print '[LOG] '+line
+  print '[LOG]'+line
   log = open('IRCBot.log', 'a')
   log.write(line+'\n')
   log.close()
@@ -47,7 +47,7 @@ printIrc('Ohayo-nyan ! [http://i.imgur.com/vzYFOkp.jpg]')
 
 while 1:    #puts it in a loop
   text=irc.recv(2048)  #receive the text
-  print text
+  print '[IN]'+text
 
   if text.find('PING') != -1:                          #check if 'PING' is found
     irc.send('PONG ' + text.split() [1] + '\n')      #returnes 'PONG' back t
@@ -77,14 +77,14 @@ while 1:    #puts it in a loop
             if wget.find('<title>') != -1:
               title = get_element(wget, 'title')
               printIrc('Title: '+title)
-              log(url+', '+title)
+              log(url+'; '+str(mimeType)+'; '+title)
             if wget.find('<TITLE>') != -1:
               title = get_element(wget, 'TITLE')
               printIrc('Title: '+title)
-              log(url+', '+title)
+              log(url+'; '+str(mimeType)+'; '+title)
           else:
             printIrc('Type: '+mimeType)
-            log(url+', '+mimeType)
+            log(url+'; '+str(mimeType))
         except:
           printIrc('[ERROR] Can\'t open the page')
       else:
