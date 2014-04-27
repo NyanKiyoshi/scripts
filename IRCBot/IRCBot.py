@@ -64,33 +64,36 @@ while 1:    #puts it in a loop
     out = t[1].strip() #this code is for getting the first word after !hi
     printIrc('\x01ACTION '+out+'\x01')
   if httpRegex.search(text) is not None:
-    parse = re.findall('https?://[^\"\'\(\)\[\]\{\}\<\>\ ]+', text)
-    try:
-      url = str(parse[0]).rstrip() #took the first link and remove newline and whitespaces
-      if (len(url) > 8) : # I assume a link is more than 8 characters long (thx NyanKiyoshi for spotting my drunkness here xD)
+    parse = re.findall('https?://[^\"\'\(\)\[\]\{\}\\<\>\ ]+', text)
+    i = 0
+    for c in parse:
         try:
-          get = urllib.urlopen(url)
-          wget = get.read()
-          mimeType = get.info().type
-          get.close()
-          if (re.search('text/x?html', mimeType)):
-            if wget.find('<title>') != -1:
-              title = get_element(wget, 'title')
-              printIrc('Title: '+title)
-              log(url+'; '+str(mimeType)+'; '+title)
-            if wget.find('<TITLE>') != -1:
-              title = get_element(wget, 'TITLE')
-              printIrc('Title: '+title)
-              log(url+'; '+str(mimeType)+'; '+title)
+          url = str(parse[i]).rstrip() #took the first link and remove newline and whitespaces
+          if (len(url) > 8) : # I assume a link is more than 8 characters long (thx NyanKiyoshi for spotting my drunkness here xD)
+            try:
+              get = urllib.urlopen(url)
+              wget = get.read()
+              mimeType = get.info().type
+              get.close()
+              if (re.search('text/x?html', mimeType)):
+                if wget.find('<title>') != -1:
+                  title = get_element(wget, 'title')
+                  printIrc('Title: '+title)
+                  log(url+'; '+str(mimeType)+'; '+title)
+                if wget.find('<TITLE>') != -1:
+                  title = get_element(wget, 'TITLE')
+                  printIrc('Title: '+title)
+                  log(url+'; '+str(mimeType)+'; '+title)
+              else:
+                printIrc('Type: '+mimeType)
+                log(url+'; '+str(mimeType))
+            except:
+              printIrc('[ERROR] Can\'t open the page')
           else:
-            printIrc('Type: '+mimeType)
-            log(url+'; '+str(mimeType))
+            printIrc('Link too short')
         except:
-          printIrc('[ERROR] Can\'t open the page')
-      else:
-        printIrc('Link too short')
-    except:
-      printIrc('[ERROR] Invalid URL')
+          printIrc('[ERROR] Invalid URL')
+        i += 1
   if text.find(':!source') != -1:
     printIrc(source)
   #if text.find(':!'+nick+' help') != -1:
