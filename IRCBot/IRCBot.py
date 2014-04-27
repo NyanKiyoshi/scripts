@@ -65,8 +65,7 @@ while 1:    #puts it in a loop
     printIrc('\x01ACTION '+out+'\x01')
   if httpRegex.search(text) is not None:
     parse = re.findall('https?://[^\"\'\(\)\[\]\{\}\\<\>\ ]+', text)
-    i = 0
-    for c in parse:
+    for i in range(len(parse)):
         try:
           url = str(parse[i]).rstrip() #took the first link and remove newline and whitespaces
           if (len(url) > 8) : # I assume a link is more than 8 characters long (thx NyanKiyoshi for spotting my drunkness here xD)
@@ -93,7 +92,6 @@ while 1:    #puts it in a loop
             printIrc('Link too short')
         except:
           printIrc('[ERROR] Invalid URL')
-        i += 1
   if text.find(':!source') != -1:
     printIrc(source)
   #if text.find(':!'+nick+' help') != -1:
